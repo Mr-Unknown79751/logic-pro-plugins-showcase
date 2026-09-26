@@ -22,16 +22,15 @@
         --shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
       }
 
-      * { 
-        box-sizing: border-box; 
+      * {
+        box-sizing: border-box;
         -webkit-tap-highlight-color: transparent;
       }
 
       html, body {
         margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+        min-height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
         background:
           radial-gradient(circle at top left, rgba(124, 156, 255, 0.14), transparent 35%),
           radial-gradient(circle at bottom right, rgba(142, 240, 214, 0.12), transparent 25%),
@@ -48,8 +47,8 @@
       }
 
       .app {
-        width: 100%;
-        max-width: 1400px;
+        width: min(1400px, 100%);
+        min-height: 980px;
         background: rgba(8, 13, 24, 0.76);
         border: 1px solid var(--line);
         border-radius: clamp(16px, 3vw, 28px);
@@ -62,11 +61,11 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 16px;
         padding: clamp(14px, 3vw, 18px) clamp(16px, 4vw, 28px);
         border-bottom: 1px solid var(--line);
         background: rgba(15, 22, 36, 0.75);
         flex-wrap: wrap;
-        gap: 16px;
       }
 
       .brand {
@@ -88,15 +87,11 @@
         color: #08111d;
         font-weight: 900;
         font-size: clamp(12px, 2.5vw, 14px);
-        flex-shrink: 0;
       }
 
       .nav {
         display: flex;
         gap: 6px;
-        align-items: center;
-        color: var(--muted);
-        font-size: clamp(11px, 1.8vw, 14px);
         flex-wrap: wrap;
         justify-content: flex-end;
       }
@@ -106,27 +101,27 @@
         border-radius: 999px;
         border: 1px solid transparent;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: var(--muted);
+        font-size: clamp(11px, 1.8vw, 14px);
+        transition: all 0.25s ease;
       }
 
       .nav span:hover {
         color: var(--text);
-        border-color: rgba(124,156,255,0.3);
-        background: rgba(124,156,255,0.06);
+        border-color: rgba(124, 156, 255, 0.3);
+        background: rgba(124, 156, 255, 0.06);
       }
 
       .nav .active {
         color: var(--text);
         border-color: var(--line);
-        background: rgba(255,255,255,0.02);
+        background: rgba(255, 255, 255, 0.02);
         box-shadow: 0 4px 12px rgba(124, 156, 255, 0.1);
       }
 
       .content {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 0;
-        min-height: auto;
       }
 
       @media (min-width: 1024px) {
@@ -155,17 +150,15 @@
         align-items: flex-end;
         justify-content: space-between;
         gap: clamp(12px, 3vw, 18px);
-        margin-bottom: clamp(16px, 3vw, 22px);
         flex-wrap: wrap;
+        margin-bottom: clamp(16px, 3vw, 22px);
       }
 
-      h1 {
+      .intro h1 {
         margin: 0;
         font-size: clamp(28px, 6vw, 52px);
         line-height: 1.04;
         letter-spacing: -0.06em;
-        flex: 1;
-        min-width: 200px;
       }
 
       .badge {
@@ -184,11 +177,53 @@
         white-space: nowrap;
       }
 
+      .toolbar {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .search-box {
+        position: relative;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 16px;
+        pointer-events: none;
+      }
+
+      .search-box input {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 14px;
+        padding: 14px 18px 14px 45px;
+        font-size: 15px;
+        color: var(--text);
+        outline: none;
+        transition: all 0.25s ease;
+      }
+
+      .search-box input::placeholder {
+        color: var(--muted);
+      }
+
+      .search-box input:focus {
+        border-color: rgba(124, 156, 255, 0.6);
+        box-shadow: 0 0 0 4px rgba(124, 156, 255, 0.1);
+        background: rgba(124, 156, 255, 0.04);
+      }
+
       .filter-row {
         display: flex;
         flex-wrap: wrap;
         gap: clamp(8px, 2vw, 10px);
-        margin: clamp(16px, 3vw, 26px) 0 clamp(12px, 3vw, 18px);
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         padding-bottom: 4px;
@@ -197,12 +232,12 @@
       .chip {
         padding: clamp(7px, 1.5vw, 9px) clamp(12px, 2vw, 14px);
         border-radius: 999px;
-        background: rgba(255,255,255,0.02);
+        background: rgba(255, 255, 255, 0.02);
         border: 1px solid var(--line);
         color: var(--muted);
         font-size: clamp(12px, 1.8vw, 13px);
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.25s ease;
         white-space: nowrap;
         flex-shrink: 0;
         font-weight: 500;
@@ -210,8 +245,8 @@
 
       .chip:hover {
         color: var(--text);
-        border-color: rgba(124,156,255,0.45);
-        background: rgba(124,156,255,0.06);
+        border-color: rgba(124, 156, 255, 0.45);
+        background: rgba(124, 156, 255, 0.06);
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(124, 156, 255, 0.08);
       }
@@ -222,8 +257,8 @@
 
       .chip.active {
         color: var(--text);
-        border-color: rgba(124,156,255,0.8);
-        background: rgba(124,156,255,0.15);
+        border-color: rgba(124, 156, 255, 0.8);
+        background: rgba(124, 156, 255, 0.15);
         box-shadow: 0 4px 16px rgba(124, 156, 255, 0.12);
       }
 
@@ -259,7 +294,7 @@
         border: 1px solid var(--line);
         background: linear-gradient(180deg, var(--card), var(--card-2));
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.25s ease;
         min-height: clamp(180px, 25vw, 210px);
         display: flex;
         flex-direction: column;
@@ -269,18 +304,17 @@
 
       .plugin-card:hover {
         transform: translateY(-4px);
-        border-color: rgba(124,156,255,0.38);
+        border-color: rgba(124, 156, 255, 0.38);
         box-shadow: 0 20px 40px rgba(124, 156, 255, 0.15);
       }
 
       .plugin-card:active {
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(124, 156, 255, 0.1);
       }
 
       .plugin-card.selected {
-        border-color: rgba(124,156,255,0.8);
-        background: linear-gradient(180deg, rgba(124,156,255,0.15), rgba(18, 26, 42, 1));
+        border-color: rgba(124, 156, 255, 0.8);
+        background: linear-gradient(180deg, rgba(124, 156, 255, 0.15), rgba(18, 26, 42, 1));
         box-shadow: 0 16px 32px rgba(124, 156, 255, 0.12);
       }
 
@@ -293,15 +327,14 @@
         font-weight: 800;
         font-size: clamp(14px, 3vw, 18px);
         margin-bottom: clamp(12px, 2vw, 18px);
-        background: linear-gradient(135deg, rgba(124,156,255,0.26), rgba(142,240,214,0.2));
-        border: 1px solid rgba(255,255,255,0.1);
-        flex-shrink: 0;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: linear-gradient(135deg, rgba(124, 156, 255, 0.26), rgba(142, 240, 214, 0.2));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.25s ease;
       }
 
       .plugin-card:hover .plugin-icon {
-        background: linear-gradient(135deg, rgba(124,156,255,0.35), rgba(142,240,214,0.28));
-        border-color: rgba(124,156,255,0.3);
+        background: linear-gradient(135deg, rgba(124, 156, 255, 0.35), rgba(142, 240, 214, 0.28));
+        border-color: rgba(124, 156, 255, 0.3);
         transform: scale(1.05);
       }
 
@@ -330,12 +363,6 @@
         border-radius: 999px;
         white-space: nowrap;
         flex-shrink: 0;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .plugin-card:hover .type-pill {
-        background: rgba(245, 215, 148, 0.12);
-        border-color: rgba(245, 215, 148, 0.35);
       }
 
       .plugin-card p {
@@ -358,7 +385,7 @@
       .rating {
         color: var(--accent-2);
         font-weight: 700;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.25s ease;
       }
 
       .plugin-card:hover .rating {
@@ -383,7 +410,7 @@
         border-radius: 24px;
         padding: clamp(16px, 3vw, 22px);
         position: relative;
-        animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: slideIn 0.35s ease;
       }
 
       @keyframes slideIn {
@@ -428,11 +455,9 @@
         display: grid;
         place-items: center;
         font-weight: 800;
-        background: linear-gradient(135deg, rgba(124,156,255,0.24), rgba(142,240,214,0.18));
-        border: 1px solid rgba(255,255,255,0.1);
+        background: linear-gradient(135deg, rgba(124, 156, 255, 0.24), rgba(142, 240, 214, 0.18));
+        border: 1px solid rgba(255, 255, 255, 0.1);
         font-size: clamp(14px, 2.5vw, 18px);
-        flex-shrink: 0;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .detail-name {
@@ -448,19 +473,13 @@
         gap: 8px;
         padding: clamp(5px, 1vw, 7px) clamp(8px, 1.5vw, 10px);
         border-radius: 999px;
-        background: rgba(255,255,255,0.02);
+        background: rgba(255, 255, 255, 0.02);
         border: 1px solid var(--line);
         font-size: clamp(9px, 1.3vw, 11px);
         color: var(--muted);
         text-transform: uppercase;
         letter-spacing: 0.08em;
         white-space: nowrap;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .detail-brand:hover {
-        background: rgba(124,156,255,0.08);
-        border-color: rgba(124,156,255,0.3);
       }
 
       .detail-block {
@@ -497,7 +516,7 @@
         color: var(--text);
         font-size: clamp(12px, 1.8vw, 14px);
         line-height: 1.6;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.25s ease;
       }
 
       .feature-list li:hover {
@@ -514,7 +533,7 @@
         position: absolute;
         left: 0;
         top: 9px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.25s ease;
       }
 
       .feature-list li:hover::before {
@@ -534,18 +553,18 @@
       .similar-tag {
         padding: clamp(6px, 1vw, 8px) clamp(9px, 1.5vw, 11px);
         border-radius: 999px;
-        border: 1px solid rgba(124,156,255,0.18);
-        background: rgba(124,156,255,0.07);
+        border: 1px solid rgba(124, 156, 255, 0.18);
+        background: rgba(124, 156, 255, 0.07);
         color: #dfe8ff;
         font-size: clamp(10px, 1.5vw, 12px);
         white-space: nowrap;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.25s ease;
       }
 
       .similar-tag:hover {
-        border-color: rgba(124,156,255,0.45);
-        background: rgba(124,156,255,0.15);
+        border-color: rgba(124, 156, 255, 0.45);
+        background: rgba(124, 156, 255, 0.15);
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(124, 156, 255, 0.1);
         color: #ffffff;
@@ -555,7 +574,12 @@
         transform: translateY(0);
       }
 
-      /* Mobile optimizations */
+      .result-counter {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 8px;
+      }
+
       @media (max-width: 480px) {
         body {
           padding: 12px;
@@ -568,7 +592,6 @@
         .topbar {
           flex-direction: column;
           align-items: stretch;
-          gap: 12px;
         }
 
         .brand {
@@ -577,16 +600,11 @@
 
         .nav {
           justify-content: center;
-          gap: 4px;
         }
 
         .nav span {
           padding: 6px 8px;
           font-size: 11px;
-        }
-
-        h1 {
-          text-align: center;
         }
 
         .intro {
@@ -599,10 +617,6 @@
           margin: 0 auto;
         }
 
-        .plugin-grid {
-          grid-template-columns: 1fr;
-        }
-
         .filter-row {
           justify-content: center;
         }
@@ -611,77 +625,6 @@
           flex-direction: column;
           align-items: center;
           text-align: center;
-        }
-
-        .detail-name {
-          font-size: 1.4rem;
-        }
-      }
-
-      /* Tablet view */
-      @media (min-width: 481px) and (max-width: 1023px) {
-        .plugin-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        .content {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      /* Landscape mobile */
-      @media (max-height: 600px) and (orientation: landscape) {
-        .app {
-          min-height: auto;
-        }
-
-        .detail-card {
-          position: relative;
-        }
-
-        h1 {
-          font-size: clamp(24px, 4vw, 36px);
-        }
-      }
-
-      /* Touch devices */
-      @media (hover: none) and (pointer: coarse) {
-        .chip,
-        .plugin-card,
-        .detail-card,
-        .similar-tag {
-          -webkit-user-select: none;
-          user-select: none;
-        }
-      }
-
-      /* Print styles */
-      @media print {
-        body {
-          background: white;
-          padding: 0;
-        }
-
-        .app {
-          box-shadow: none;
-          border: 1px solid #ccc;
-        }
-
-        .topbar,
-        .filter-row {
-          background: #f5f5f5;
-        }
-
-        .plugin-card:hover {
-          box-shadow: none;
-        }
-      }
-
-      /* High DPI screens */
-      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-        .plugin-card,
-        .detail-card {
-          border-width: 0.5px;
         }
       }
     </style>
@@ -709,15 +652,23 @@
             <div class="badge">Logic Pro Suite</div>
           </div>
 
-          <div class="filter-row">
-            <div class="chip active" data-filter="all">All</div>
-            <div class="chip" data-filter="synth">Synth</div>
-            <div class="chip" data-filter="fx">FX</div>
-            <div class="chip" data-filter="eq">EQ</div>
-            <div class="chip" data-filter="drums">Drums</div>
-            <div class="chip" data-filter="mixing">Mixing</div>
+          <div class="toolbar">
+            <div class="search-box">
+              <span class="search-icon">⌕</span>
+              <input id="searchInput" type="text" placeholder="Search plugins, types, or features..." aria-label="Search plugins" />
+            </div>
+
+            <div class="filter-row">
+              <div class="chip active" data-filter="all">All</div>
+              <div class="chip" data-filter="synth">Synth</div>
+              <div class="chip" data-filter="fx">FX</div>
+              <div class="chip" data-filter="eq">EQ</div>
+              <div class="chip" data-filter="drums">Drums</div>
+              <div class="chip" data-filter="mixing">Mixing</div>
+            </div>
           </div>
 
+          <div id="resultCounter" class="result-counter"></div>
           <div id="pluginGrid" class="plugin-grid"></div>
         </div>
 
@@ -871,24 +822,47 @@
       const detailCard = document.getElementById("detailCard");
       const filterChips = document.querySelectorAll(".chip");
       const navSpans = document.querySelectorAll(".nav span");
+      const searchInput = document.getElementById("searchInput");
+      const resultCounter = document.getElementById("resultCounter");
 
       let selectedId = plugins[0].id;
       let currentFilter = "all";
+      let searchTerm = "";
 
-      function filterPlugins() {
-        if (currentFilter === "all") {
-          return plugins;
-        }
-        return plugins.filter(p => p.category === currentFilter);
+      function getFilteredPlugins() {
+        const term = searchTerm.trim().toLowerCase();
+
+        return plugins.filter((plugin) => {
+          const matchesFilter = currentFilter === "all" || plugin.category === currentFilter;
+          const searchableText = [
+            plugin.name,
+            plugin.type,
+            plugin.category,
+            plugin.tagline,
+            plugin.description,
+            ...plugin.provides,
+            ...plugin.useCases,
+            ...plugin.similar
+          ].join(" ").toLowerCase();
+
+          const matchesSearch = !term || searchableText.includes(term);
+          return matchesFilter && matchesSearch;
+        });
       }
 
       function renderCards() {
         pluginGrid.innerHTML = "";
-        const filtered = filterPlugins();
+        const filtered = getFilteredPlugins();
+
+        resultCounter.textContent = `${filtered.length} plugin${filtered.length === 1 ? "" : "s"} found`;
 
         if (filtered.length === 0) {
-          pluginGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 40px 20px;">No plugins found for this category.</div>';
+          pluginGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 40px 20px;">No plugins match your search.</div>';
           return;
+        }
+
+        if (!filtered.some((p) => p.id === selectedId)) {
+          selectedId = filtered[0].id;
         }
 
         filtered.forEach((plugin) => {
@@ -908,6 +882,7 @@
               <span class="rating">★★★★★</span>
             </div>
           `;
+
           card.addEventListener("click", () => {
             selectedId = plugin.id;
             renderCards();
@@ -916,13 +891,13 @@
               detailCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
           });
+
           pluginGrid.appendChild(card);
         });
       }
 
       function renderDetail() {
         const plugin = plugins.find((item) => item.id === selectedId);
-
         if (!plugin) return;
 
         detailCard.innerHTML = `
@@ -964,39 +939,31 @@
         `;
       }
 
-      // Filter chip click handlers
       filterChips.forEach((chip) => {
         chip.addEventListener("click", () => {
-          filterChips.forEach(c => c.classList.remove("active"));
+          filterChips.forEach((c) => c.classList.remove("active"));
           chip.classList.add("active");
           currentFilter = chip.dataset.filter;
-          
-          // Reset to first plugin of filtered list
-          const filtered = filterPlugins();
-          if (filtered.length > 0) {
-            selectedId = filtered[0].id;
-          }
-          
           renderCards();
           renderDetail();
         });
       });
 
-      // Nav span click handlers
-      navSpans.forEach((span, index) => {
+      navSpans.forEach((span) => {
         span.addEventListener("click", () => {
-          navSpans.forEach(s => s.classList.remove("active"));
+          navSpans.forEach((s) => s.classList.remove("active"));
           span.classList.add("active");
         });
       });
 
+      searchInput.addEventListener("input", (event) => {
+        searchTerm = event.target.value;
+        renderCards();
+        renderDetail();
+      });
+
       renderCards();
       renderDetail();
-
-      // Handle window resize
-      window.addEventListener("resize", () => {
-        // Re-render can be added here if needed
-      });
     </script>
   </body>
 </html>
