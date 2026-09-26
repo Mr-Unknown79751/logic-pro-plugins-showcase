@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logic Pro Plugin Vault</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --bg-2: #121a2b;
+        --panel: rgba(17, 24, 39, 0.9);
+        --panel-2: rgba(20, 31, 48, 0.9);
+        --card: #111827;
+        --card-2: #172033;
+        --line: rgba(148, 163, 184, 0.18);
+        --text: #edf4ff;
+        --muted: #a9b8d0;
+        --accent: #7c9cff;
+        --accent-2: #8ef0d6;
+        --gold: #f5d794;
+        --danger: #ff7b7b;
+        --shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
+      }
+
+      * { 
+        box-sizing: border-box; 
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(124, 156, 255, 0.14), transparent 35%),
+          radial-gradient(circle at bottom right, rgba(142, 240, 214, 0.12), transparent 25%),
+          var(--bg);
+        color: var(--text);
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+        min-height: 100vh;
+      }
+
+      .app {
+        width: 100%;
+        max-width: 1400px;
+        background: rgba(8, 13, 24, 0.76);
+        border: 1px solid var(--line);
+        border-radius: clamp(16px, 3vw, 28px);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        backdrop-filter: blur(18px);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: clamp(14px, 3vw, 18px) clamp(16px, 4vw, 28px);
+        border-bottom: 1px solid var(--line);
+        background: rgba(15, 22, 36, 0.75);
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        font-size: clamp(14px, 2.5vw, 18px);
+      }
+
+      .brand-mark {
+        width: clamp(28px, 5vw, 34px);
+        height: clamp(28px, 5vw, 34px);
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #08111d;
+        font-weight: 900;
+        font-size: clamp(12px, 2.5vw, 14px);
+        flex-shrink: 0;
+      }
+
+      .nav {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        color: var(--muted);
+        font-size: clamp(11px, 1.8vw, 14px);
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .nav span {
+        padding: clamp(6px, 1vw, 8px) clamp(8px, 1.5vw, 12px);
+        border-radius: 999px;
+        border: 1px solid transparent;
+        white-space: nowrap;
+      }
+
+      .nav .active {
+        color: var(--text);
+        border-color: var(--line);
+        background: rgba(255,255,255,0.02);
+      }
+
+      .content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        min-height: auto;
+      }
+
+      @media (min-width: 1024px) {
+        .content {
+          grid-template-columns: 1.4fr 0.94fr;
+          min-height: 900px;
+        }
+      }
+
+      .left-panel {
+        padding: clamp(18px, 4vw, 32px) clamp(16px, 4vw, 28px) clamp(16px, 3vw, 24px);
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(16, 24, 38, 0.72), rgba(15, 22, 37, 0.9));
+      }
+
+      @media (min-width: 1024px) {
+        .left-panel {
+          border-right: 1px solid var(--line);
+          border-bottom: none;
+        }
+      }
+
+      .intro {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: clamp(12px, 3vw, 18px);
+        margin-bottom: clamp(16px, 3vw, 22px);
+        flex-wrap: wrap;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 6vw, 52px);
+        line-height: 1.04;
+        letter-spacing: -0.06em;
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: clamp(7px, 1.5vw, 8px) clamp(10px, 2vw, 12px);
+        border-radius: 999px;
+        background: rgba(142, 240, 214, 0.08);
+        border: 1px solid rgba(142, 240, 214, 0.2);
+        color: var(--accent-2);
+        font-size: clamp(10px, 1.5vw, 12px);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: clamp(8px, 2vw, 10px);
+        margin: clamp(16px, 3vw, 26px) 0 clamp(12px, 3vw, 18px);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+      }
+
+      .chip {
+        padding: clamp(7px, 1.5vw, 9px) clamp(12px, 2vw, 14px);
+        border-radius: 999px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        color: var(--muted);
+        font-size: clamp(12px, 1.8vw, 13px);
+        cursor: pointer;
+        transition: 0.2s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .chip:hover, .chip.active {
+        color: var(--text);
+        border-color: rgba(124,156,255,0.45);
+        background: rgba(124,156,255,0.08);
+      }
+
+      .plugin-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: clamp(12px, 3vw, 18px);
+        margin-top: 10px;
+      }
+
+      @media (min-width: 640px) {
+        .plugin-grid {
+          grid-template-columns: repeat(2, minmax(200px, 1fr));
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .plugin-grid {
+          grid-template-columns: repeat(2, minmax(240px, 1fr));
+        }
+      }
+
+      @media (min-width: 1280px) {
+        .plugin-grid {
+          grid-template-columns: repeat(2, minmax(280px, 1fr));
+        }
+      }
+
+      .plugin-card {
+        position: relative;
+        padding: clamp(14px, 3vw, 18px);
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, var(--card), var(--card-2));
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        min-height: clamp(180px, 25vw, 210px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .plugin-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(124,156,255,0.38);
+        box-shadow: 0 18px 30px rgba(0,0,0,0.18);
+      }
+
+      .plugin-card:active {
+        transform: translateY(0);
+      }
+
+      .plugin-card.selected {
+        border-color: rgba(124,156,255,0.8);
+        background: linear-gradient(180deg, rgba(124,156,255,0.09), rgba(18, 26, 42, 1));
+      }
+
+      .plugin-icon {
+        width: clamp(40px, 8vw, 52px);
+        height: clamp(40px, 8vw, 52px);
+        border-radius: 15px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: clamp(14px, 3vw, 18px);
+        margin-bottom: clamp(12px, 2vw, 18px);
+        background: linear-gradient(135deg, rgba(124,156,255,0.26), rgba(142,240,214,0.2));
+        border: 1px solid rgba(255,255,255,0.1);
+        flex-shrink: 0;
+      }
+
+      .plugin-topline {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: clamp(8px, 2vw, 12px);
+      }
+
+      .plugin-name {
+        font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+        font-weight: 700;
+      }
+
+      .type-pill {
+        font-size: clamp(8px, 1.2vw, 10px);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gold);
+        background: rgba(245, 215, 148, 0.08);
+        border: 1px solid rgba(245, 215, 148, 0.2);
+        padding: clamp(4px, 1vw, 6px) clamp(6px, 1.2vw, 8px);
+        border-radius: 999px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .plugin-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+        font-size: clamp(12px, 1.8vw, 14px);
+        flex-grow: 1;
+      }
+
+      .plugin-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: clamp(12px, 2vw, 18px);
+        color: var(--muted);
+        font-size: clamp(11px, 1.5vw, 12px);
+      }
+
+      .rating {
+        color: var(--accent-2);
+        font-weight: 700;
+      }
+
+      .right-panel {
+        padding: clamp(16px, 3vw, 30px) clamp(16px, 3vw, 24px) clamp(12px, 3vw, 18px);
+        background: linear-gradient(180deg, rgba(11, 16, 32, 0.9), rgba(17, 24, 39, 1));
+      }
+
+      @media (max-width: 1023px) {
+        .right-panel {
+          border-top: 1px solid var(--line);
+        }
+      }
+
+      .detail-card {
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(18, 26, 40, 0.96), rgba(13, 19, 32, 0.96));
+        border-radius: 24px;
+        padding: clamp(16px, 3vw, 22px);
+        position: relative;
+      }
+
+      @media (min-width: 1024px) {
+        .detail-card {
+          position: sticky;
+          top: 22px;
+        }
+      }
+
+      .detail-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: clamp(14px, 2vw, 18px);
+        flex-wrap: wrap;
+      }
+
+      .detail-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: clamp(10px, 2vw, 12px);
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .detail-icon {
+        width: clamp(44px, 8vw, 58px);
+        height: clamp(44px, 8vw, 58px);
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        background: linear-gradient(135deg, rgba(124,156,255,0.24), rgba(142,240,214,0.18));
+        border: 1px solid rgba(255,255,255,0.1);
+        font-size: clamp(14px, 2.5vw, 18px);
+        flex-shrink: 0;
+      }
+
+      .detail-name {
+        font-size: clamp(1.5rem, 5vw, 1.78rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        line-height: 1.2;
+      }
+
+      .detail-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: clamp(5px, 1vw, 7px) clamp(8px, 1.5vw, 10px);
+        border-radius: 999px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--line);
+        font-size: clamp(9px, 1.3vw, 11px);
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+      }
+
+      .detail-block {
+        margin-top: clamp(14px, 2vw, 18px);
+      }
+
+      .section-label {
+        font-size: clamp(9px, 1.5vw, 11px);
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: clamp(8px, 1.5vw, 10px);
+      }
+
+      .detail-copy {
+        color: var(--muted);
+        line-height: 1.7;
+        margin: 0;
+        font-size: clamp(13px, 2vw, 15px);
+      }
+
+      .feature-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: clamp(8px, 1.5vw, 10px);
+      }
+
+      .feature-list li {
+        position: relative;
+        padding-left: 18px;
+        color: var(--text);
+        font-size: clamp(12px, 1.8vw, 14px);
+        line-height: 1.6;
+      }
+
+      .feature-list li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(180deg, var(--accent-2), var(--accent));
+        position: absolute;
+        left: 0;
+        top: 9px;
+      }
+
+      .similar-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: clamp(6px, 1.5vw, 8px);
+        margin-top: clamp(10px, 1.5vw, 12px);
+      }
+
+      .similar-tag {
+        padding: clamp(6px, 1vw, 8px) clamp(9px, 1.5vw, 11px);
+        border-radius: 999px;
+        border: 1px solid rgba(124,156,255,0.18);
+        background: rgba(124,156,255,0.07);
+        color: #dfe8ff;
+        font-size: clamp(10px, 1.5vw, 12px);
+        white-space: nowrap;
+      }
+
+      /* Mobile optimizations */
+      @media (max-width: 480px) {
+        body {
+          padding: 12px;
+        }
+
+        .app {
+          border-radius: 16px;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+        }
+
+        .brand {
+          justify-content: center;
+        }
+
+        .nav {
+          justify-content: center;
+          gap: 4px;
+        }
+
+        .nav span {
+          padding: 6px 8px;
+          font-size: 11px;
+        }
+
+        h1 {
+          text-align: center;
+        }
+
+        .intro {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+
+        .badge {
+          margin: 0 auto;
+        }
+
+        .plugin-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filter-row {
+          justify-content: center;
+        }
+
+        .detail-title-wrap {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+
+        .detail-name {
+          font-size: 1.4rem;
+        }
+      }
+
+      /* Tablet view */
+      @media (min-width: 481px) and (max-width: 1023px) {
+        .plugin-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .content {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Landscape mobile */
+      @media (max-height: 600px) and (orientation: landscape) {
+        .app {
+          min-height: auto;
+        }
+
+        .detail-card {
+          position: relative;
+        }
+
+        h1 {
+          font-size: clamp(24px, 4vw, 36px);
+        }
+      }
+
+      /* Touch devices */
+      @media (hover: none) and (pointer: coarse) {
+        .chip,
+        .plugin-card,
+        .detail-card {
+          -webkit-user-select: none;
+          user-select: none;
+        }
+
+        .chip:active,
+        .plugin-card:active {
+          background: rgba(124,156,255,0.12);
+          border-color: rgba(124,156,255,0.45);
+        }
+      }
+
+      /* Print styles */
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+        }
+
+        .app {
+          box-shadow: none;
+          border: 1px solid #ccc;
+        }
+
+        .topbar,
+        .filter-row {
+          background: #f5f5f5;
+        }
+
+        .plugin-card:hover {
+          box-shadow: none;
+        }
+      }
+
+      /* High DPI screens */
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .plugin-card,
+        .detail-card {
+          border-width: 0.5px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-mark">L</div>
+          <span>Logic Pro</span>
+        </div>
+
+        <div class="nav">
+          <span class="active">Plugin Library</span>
+          <span>Sound Design</span>
+          <span>Mixing</span>
+          <span>Creative FX</span>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="left-panel">
+          <div class="intro">
+            <h1>Plugin Vault</h1>
+            <div class="badge">Logic Pro Suite</div>
+          </div>
+
+          <div class="filter-row">
+            <div class="chip active">All</div>
+            <div class="chip">Synth</div>
+            <div class="chip">FX</div>
+            <div class="chip">EQ</div>
+            <div class="chip">Drums</div>
+            <div class="chip">Mixing</div>
+          </div>
+
+          <div id="pluginGrid" class="plugin-grid"></div>
+        </div>
+
+        <aside class="right-panel">
+          <div id="detailCard" class="detail-card"></div>
+        </aside>
+      </div>
+    </div>
+
+    <script>
+      const plugins = [
+        {
+          id: 1,
+          name: "Alchemy",
+          type: "Synth",
+          icon: "A",
+          tagline: "A massive sound-design engine for cinematic, hybrid, and experimental textures.",
+          description:
+            "Alchemy gives musicians an all-in-one environment for crafting complex synths, organic instruments, and evolving soundscapes. It blends sampling, synthesis, and granular processing in a single intuitive interface.",
+          provides: [
+            "Polyphonic sound design with morphing presets",
+            "Granular and spectral processing for textures and ambience",
+            "High-quality sample and synth blending in one instrument"
+          ],
+          useCases: ["Film scoring", "Ambient production", "Texture design"],
+          similar: ["Sculpture", "Retro Synth"]
+        },
+        {
+          id: 2,
+          name: "Space Designer",
+          type: "Reverb",
+          icon: "SD",
+          tagline: "Convolution reverb for natural rooms, halls, and impossibly large spaces.",
+          description:
+            "Space Designer recreates real-world acoustic environments with detailed impulse responses. It is ideal for adding depth, realism, and emotional atmosphere to vocals, drums, and mixes.",
+          provides: [
+            "Realistic room, hall, and plate reverbs",
+            "Impulse-response customization and modulation",
+            "Professional depth for mixes and cinematic ambience"
+          ],
+          useCases: ["Vocal depth", "Mix space", "Cinematic ambience"],
+          similar: ["Chorus", "Vintage Verb"]
+        },
+        {
+          id: 3,
+          name: "Vintage EQ",
+          type: "EQ",
+          icon: "VQ",
+          tagline: "A warm, analog-inspired equalizer for bold tonal shaping.",
+          description:
+            "Vintage EQ adds a smooth, character-rich tone to tracks with classic analog filtering. It is especially useful for enhancing vocals, guitars, and overall mix balance without harshness.",
+          provides: [
+            "Analog-style tonal shaping",
+            "Gentle low-end enhancement and top-end sparkle",
+            "Smooth corrective EQ for polished mixes"
+          ],
+          useCases: ["Mix balancing", "Track shaping", "Warm mastering"],
+          similar: ["Channel EQ", "Linear EQ"]
+        },
+        {
+          id: 4,
+          name: "Compressor",
+          type: "Mixing",
+          icon: "C",
+          tagline: "A fast, flexible dynamics tool for transparent or aggressive control.",
+          description:
+            "The Logic Pro Compressor is built for both corrective dynamics and creative punch. It helps control peaks, smooth transients, and add movement to nearly any source.",
+          provides: [
+            "Peak and RMS control",
+            "Punchy rhythm shaping and transient control",
+            "Easy-to-use compression for mixes and mastering"
+          ],
+          useCases: ["Drums", "Bus processing", "Mastering"],
+          similar: ["Limiter", "Multipressor"]
+        },
+        {
+          id: 5,
+          name: "Drummer",
+          type: "Drums",
+          icon: "D",
+          tagline: "Built-in virtual drummer that adapts to style, tempo, and song structure.",
+          description:
+            "Drummer gives you a realistic performance engine for creating dynamic rhythm tracks. It can add expressive drum parts that feel human, polished, and musical without a full session drummer.",
+          provides: [
+            "Realistic drum performances by genre",
+            "Stylistic fills, swing, and variation control",
+            "Quick arrangement ideas for songwriting"
+          ],
+          useCases: ["Songwriting", "Demo production", "Rock/pop drums"],
+          similar: ["Beat Breaker", "MIDI Drummer"]
+        },
+        {
+          id: 6,
+          name: "Chorus",
+          type: "FX",
+          icon: "CH",
+          tagline: "Adds stereo width, movement, and subtle character to instruments and vocals.",
+          description:
+            "Logic Pro's Chorus plugin creates lush stereo motion for guitars, keys, synths, and vocals. It helps make clean parts feel wider, richer, and more immersive.",
+          provides: [
+            "Stereo widening and modulation",
+            "Subtle movement for synths and vocal stacks",
+            "Wide, rich textures without harsh artifacts"
+          ],
+          useCases: ["Synth layers", "Vocals", "Guitar ambience"],
+          similar: ["Phaser", "Flanger"]
+        },
+        {
+          id: 7,
+          name: "Tape Delay",
+          type: "Delay",
+          icon: "TD",
+          tagline: "Warm echo design inspired by classic tape-based delay systems.",
+          description:
+            "Tape Delay gives sounds a nostalgic, organic echo character with wow, flutter, and aged repeats. It is ideal for rhythmic movement and atmospheric depth.",
+          provides: [
+            "Vintage tape-style delay trails",
+            "Depth and movement for vocals and instruments",
+            "Analog-inspired repeat feedback"
+          ],
+          useCases: ["Guitar ambience", "Retro vocals", "Electronic hooks"],
+          similar: ["Delay Designer", "Stereo Delay"]
+        },
+        {
+          id: 8,
+          name: "Limiter",
+          type: "Mastering",
+          icon: "L",
+          tagline: "Final safety net for loud, controlled playback at the mastering stage.",
+          description:
+            "The Limiter protects against clipping while preserving dynamics and punch. It is essential for final output when your track needs polished, consistent loudness.",
+          provides: [
+            "Peak limiting for loud, clean masters",
+            "Transparent output control and safety",
+            "Final polish for mixes and streaming release"
+          ],
+          useCases: ["Mastering", "Final bus", "Release preparation"],
+          similar: ["Compressor", "Multipressor"]
+        }
+      ];
+
+      const pluginGrid = document.getElementById("pluginGrid");
+      const detailCard = document.getElementById("detailCard");
+
+      let selectedId = plugins[0].id;
+
+      function renderCards() {
+        pluginGrid.innerHTML = "";
+
+        plugins.forEach((plugin) => {
+          const card = document.createElement("div");
+          card.className = `plugin-card ${plugin.id === selectedId ? "selected" : ""}`;
+          card.innerHTML = `
+            <div>
+              <div class="plugin-icon">${plugin.icon}</div>
+              <div class="plugin-topline">
+                <div class="plugin-name">${plugin.name}</div>
+                <div class="type-pill">${plugin.type}</div>
+              </div>
+              <p>${plugin.tagline}</p>
+            </div>
+            <div class="plugin-meta">
+              <span>Featured</span>
+              <span class="rating">★★★★★</span>
+            </div>
+          `;
+          card.addEventListener("click", () => {
+            selectedId = plugin.id;
+            renderCards();
+            renderDetail();
+            // Scroll detail into view on mobile
+            if (window.innerWidth < 1024) {
+              detailCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+          });
+          pluginGrid.appendChild(card);
+        });
+      }
+
+      function renderDetail() {
+        const plugin = plugins.find((item) => item.id === selectedId);
+
+        detailCard.innerHTML = `
+          <div class="detail-header">
+            <div class="detail-title-wrap">
+              <div class="detail-icon">${plugin.icon}</div>
+              <div>
+                <div class="detail-name">${plugin.name}</div>
+                <div class="detail-brand">${plugin.type}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-block">
+            <div class="section-label">Overview</div>
+            <p class="detail-copy">${plugin.description}</p>
+          </div>
+
+          <div class="detail-block">
+            <div class="section-label">What it provides</div>
+            <ul class="feature-list">
+              ${plugin.provides.map((item) => `<li>${item}</li>`).join("")}
+            </ul>
+          </div>
+
+          <div class="detail-block">
+            <div class="section-label">Best for</div>
+            <ul class="feature-list">
+              ${plugin.useCases.map((item) => `<li>${item}</li>`).join("")}
+            </ul>
+          </div>
+
+          <div class="detail-block">
+            <div class="section-label">Similar plugins</div>
+            <div class="similar-list">
+              ${plugin.similar.map(item => `<span class="similar-tag">${item}</span>`).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      renderCards();
+      renderDetail();
+
+      // Handle window resize for responsive adjustments
+      window.addEventListener("resize", () => {
+        // Re-render can be added here if needed for specific breakpoint changes
+      });
+    </script>
+  </body>
+</html>
