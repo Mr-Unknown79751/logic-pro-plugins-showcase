@@ -105,13 +105,21 @@
         padding: clamp(6px, 1vw, 8px) clamp(8px, 1.5vw, 12px);
         border-radius: 999px;
         border: 1px solid transparent;
-        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .nav span:hover {
+        color: var(--text);
+        border-color: rgba(124,156,255,0.3);
+        background: rgba(124,156,255,0.06);
       }
 
       .nav .active {
         color: var(--text);
         border-color: var(--line);
         background: rgba(255,255,255,0.02);
+        box-shadow: 0 4px 12px rgba(124, 156, 255, 0.1);
       }
 
       .content {
@@ -194,15 +202,29 @@
         color: var(--muted);
         font-size: clamp(12px, 1.8vw, 13px);
         cursor: pointer;
-        transition: 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         white-space: nowrap;
         flex-shrink: 0;
+        font-weight: 500;
       }
 
-      .chip:hover, .chip.active {
+      .chip:hover {
         color: var(--text);
         border-color: rgba(124,156,255,0.45);
-        background: rgba(124,156,255,0.08);
+        background: rgba(124,156,255,0.06);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(124, 156, 255, 0.08);
+      }
+
+      .chip:active {
+        transform: translateY(0);
+      }
+
+      .chip.active {
+        color: var(--text);
+        border-color: rgba(124,156,255,0.8);
+        background: rgba(124,156,255,0.15);
+        box-shadow: 0 4px 16px rgba(124, 156, 255, 0.12);
       }
 
       .plugin-grid {
@@ -237,26 +259,29 @@
         border: 1px solid var(--line);
         background: linear-gradient(180deg, var(--card), var(--card-2));
         cursor: pointer;
-        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         min-height: clamp(180px, 25vw, 210px);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        user-select: none;
       }
 
       .plugin-card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-4px);
         border-color: rgba(124,156,255,0.38);
-        box-shadow: 0 18px 30px rgba(0,0,0,0.18);
+        box-shadow: 0 20px 40px rgba(124, 156, 255, 0.15);
       }
 
       .plugin-card:active {
-        transform: translateY(0);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(124, 156, 255, 0.1);
       }
 
       .plugin-card.selected {
         border-color: rgba(124,156,255,0.8);
-        background: linear-gradient(180deg, rgba(124,156,255,0.09), rgba(18, 26, 42, 1));
+        background: linear-gradient(180deg, rgba(124,156,255,0.15), rgba(18, 26, 42, 1));
+        box-shadow: 0 16px 32px rgba(124, 156, 255, 0.12);
       }
 
       .plugin-icon {
@@ -271,6 +296,13 @@
         background: linear-gradient(135deg, rgba(124,156,255,0.26), rgba(142,240,214,0.2));
         border: 1px solid rgba(255,255,255,0.1);
         flex-shrink: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .plugin-card:hover .plugin-icon {
+        background: linear-gradient(135deg, rgba(124,156,255,0.35), rgba(142,240,214,0.28));
+        border-color: rgba(124,156,255,0.3);
+        transform: scale(1.05);
       }
 
       .plugin-topline {
@@ -298,6 +330,12 @@
         border-radius: 999px;
         white-space: nowrap;
         flex-shrink: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .plugin-card:hover .type-pill {
+        background: rgba(245, 215, 148, 0.12);
+        border-color: rgba(245, 215, 148, 0.35);
       }
 
       .plugin-card p {
@@ -320,6 +358,12 @@
       .rating {
         color: var(--accent-2);
         font-weight: 700;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .plugin-card:hover .rating {
+        color: #ffff99;
+        transform: scale(1.1);
       }
 
       .right-panel {
@@ -339,6 +383,18 @@
         border-radius: 24px;
         padding: clamp(16px, 3vw, 22px);
         position: relative;
+        animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       @media (min-width: 1024px) {
@@ -376,6 +432,7 @@
         border: 1px solid rgba(255,255,255,0.1);
         font-size: clamp(14px, 2.5vw, 18px);
         flex-shrink: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .detail-name {
@@ -398,6 +455,12 @@
         text-transform: uppercase;
         letter-spacing: 0.08em;
         white-space: nowrap;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .detail-brand:hover {
+        background: rgba(124,156,255,0.08);
+        border-color: rgba(124,156,255,0.3);
       }
 
       .detail-block {
@@ -434,6 +497,12 @@
         color: var(--text);
         font-size: clamp(12px, 1.8vw, 14px);
         line-height: 1.6;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .feature-list li:hover {
+        padding-left: 24px;
+        color: var(--accent-2);
       }
 
       .feature-list li::before {
@@ -445,6 +514,14 @@
         position: absolute;
         left: 0;
         top: 9px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .feature-list li:hover::before {
+        left: 6px;
+        width: 10px;
+        height: 10px;
+        box-shadow: 0 0 10px rgba(142, 240, 214, 0.4);
       }
 
       .similar-list {
@@ -462,6 +539,20 @@
         color: #dfe8ff;
         font-size: clamp(10px, 1.5vw, 12px);
         white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .similar-tag:hover {
+        border-color: rgba(124,156,255,0.45);
+        background: rgba(124,156,255,0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(124, 156, 255, 0.1);
+        color: #ffffff;
+      }
+
+      .similar-tag:active {
+        transform: translateY(0);
       }
 
       /* Mobile optimizations */
@@ -557,15 +648,10 @@
       @media (hover: none) and (pointer: coarse) {
         .chip,
         .plugin-card,
-        .detail-card {
+        .detail-card,
+        .similar-tag {
           -webkit-user-select: none;
           user-select: none;
-        }
-
-        .chip:active,
-        .plugin-card:active {
-          background: rgba(124,156,255,0.12);
-          border-color: rgba(124,156,255,0.45);
         }
       }
 
@@ -624,12 +710,12 @@
           </div>
 
           <div class="filter-row">
-            <div class="chip active">All</div>
-            <div class="chip">Synth</div>
-            <div class="chip">FX</div>
-            <div class="chip">EQ</div>
-            <div class="chip">Drums</div>
-            <div class="chip">Mixing</div>
+            <div class="chip active" data-filter="all">All</div>
+            <div class="chip" data-filter="synth">Synth</div>
+            <div class="chip" data-filter="fx">FX</div>
+            <div class="chip" data-filter="eq">EQ</div>
+            <div class="chip" data-filter="drums">Drums</div>
+            <div class="chip" data-filter="mixing">Mixing</div>
           </div>
 
           <div id="pluginGrid" class="plugin-grid"></div>
@@ -647,6 +733,7 @@
           id: 1,
           name: "Alchemy",
           type: "Synth",
+          category: "synth",
           icon: "A",
           tagline: "A massive sound-design engine for cinematic, hybrid, and experimental textures.",
           description:
@@ -663,6 +750,7 @@
           id: 2,
           name: "Space Designer",
           type: "Reverb",
+          category: "fx",
           icon: "SD",
           tagline: "Convolution reverb for natural rooms, halls, and impossibly large spaces.",
           description:
@@ -679,6 +767,7 @@
           id: 3,
           name: "Vintage EQ",
           type: "EQ",
+          category: "eq",
           icon: "VQ",
           tagline: "A warm, analog-inspired equalizer for bold tonal shaping.",
           description:
@@ -695,6 +784,7 @@
           id: 4,
           name: "Compressor",
           type: "Mixing",
+          category: "mixing",
           icon: "C",
           tagline: "A fast, flexible dynamics tool for transparent or aggressive control.",
           description:
@@ -711,6 +801,7 @@
           id: 5,
           name: "Drummer",
           type: "Drums",
+          category: "drums",
           icon: "D",
           tagline: "Built-in virtual drummer that adapts to style, tempo, and song structure.",
           description:
@@ -727,6 +818,7 @@
           id: 6,
           name: "Chorus",
           type: "FX",
+          category: "fx",
           icon: "CH",
           tagline: "Adds stereo width, movement, and subtle character to instruments and vocals.",
           description:
@@ -743,6 +835,7 @@
           id: 7,
           name: "Tape Delay",
           type: "Delay",
+          category: "fx",
           icon: "TD",
           tagline: "Warm echo design inspired by classic tape-based delay systems.",
           description:
@@ -759,6 +852,7 @@
           id: 8,
           name: "Limiter",
           type: "Mastering",
+          category: "mixing",
           icon: "L",
           tagline: "Final safety net for loud, controlled playback at the mastering stage.",
           description:
@@ -775,13 +869,29 @@
 
       const pluginGrid = document.getElementById("pluginGrid");
       const detailCard = document.getElementById("detailCard");
+      const filterChips = document.querySelectorAll(".chip");
+      const navSpans = document.querySelectorAll(".nav span");
 
       let selectedId = plugins[0].id;
+      let currentFilter = "all";
+
+      function filterPlugins() {
+        if (currentFilter === "all") {
+          return plugins;
+        }
+        return plugins.filter(p => p.category === currentFilter);
+      }
 
       function renderCards() {
         pluginGrid.innerHTML = "";
+        const filtered = filterPlugins();
 
-        plugins.forEach((plugin) => {
+        if (filtered.length === 0) {
+          pluginGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 40px 20px;">No plugins found for this category.</div>';
+          return;
+        }
+
+        filtered.forEach((plugin) => {
           const card = document.createElement("div");
           card.className = `plugin-card ${plugin.id === selectedId ? "selected" : ""}`;
           card.innerHTML = `
@@ -802,7 +912,6 @@
             selectedId = plugin.id;
             renderCards();
             renderDetail();
-            // Scroll detail into view on mobile
             if (window.innerWidth < 1024) {
               detailCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
@@ -813,6 +922,8 @@
 
       function renderDetail() {
         const plugin = plugins.find((item) => item.id === selectedId);
+
+        if (!plugin) return;
 
         detailCard.innerHTML = `
           <div class="detail-header">
@@ -853,12 +964,38 @@
         `;
       }
 
+      // Filter chip click handlers
+      filterChips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+          filterChips.forEach(c => c.classList.remove("active"));
+          chip.classList.add("active");
+          currentFilter = chip.dataset.filter;
+          
+          // Reset to first plugin of filtered list
+          const filtered = filterPlugins();
+          if (filtered.length > 0) {
+            selectedId = filtered[0].id;
+          }
+          
+          renderCards();
+          renderDetail();
+        });
+      });
+
+      // Nav span click handlers
+      navSpans.forEach((span, index) => {
+        span.addEventListener("click", () => {
+          navSpans.forEach(s => s.classList.remove("active"));
+          span.classList.add("active");
+        });
+      });
+
       renderCards();
       renderDetail();
 
-      // Handle window resize for responsive adjustments
+      // Handle window resize
       window.addEventListener("resize", () => {
-        // Re-render can be added here if needed for specific breakpoint changes
+        // Re-render can be added here if needed
       });
     </script>
   </body>
